@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('static/bg.jpg');
+            background-size: cover; /* or contain */
+            background-repeat: no-repeat;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-top: 0;
+            margin-left: 2px;
+        }
+        .myimg {
+            width: 50px;
+            height: 50px;
+            border: 2px solid black;
+            border-radius: 25px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff;
+        }
+        h1 {
+            color: #333;
+        }
+        .main-container {
+            background: #f8f9fa;
+            color: #333;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-primary, .btn-danger {
+            border-radius: 20px;
+        }
+        .btn-lg {
+            padding: 14px;
+            font-size: 1.2em;
+        }
+        .result-container .toggle-button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .modal-header {
+            background-color: #343a40;
+            color: white;
+        }
+        .modal-body ul {
+            padding-left: 20px;
+        }
+        .predicted-disease {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid justify-content-center"> <!-- Added justify-content-center -->
+            <!-- Logo at the top-left corner -->
+            <div class="logo">
+                <img class="myimg" src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo">
+            </div>
+            <a class="navbar-brand" href="#">HealthBuddy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-center"> <!-- Added d-flex justify-content-center -->
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/developer">Developer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Main form of page -->
+    <h1 class="mt-4 my-4 text-center">Personalized Healthcare Assistance</h1>
+    <div class="container my-4 main-container">
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="symptoms">Select Symptoms:</label>
+                <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="Type symptoms such as itching, sleeping, aching etc.">
+            </div>
+            <br>
+            <button type="button" id="startSpeechRecognition" class="btn btn-primary">Start Speech Recognition</button>
+            <br>
+            <!-- Display the transcribed text here -->
+            <div name="mysysms" id="transcription"></div>
+            {% if message %}
+            <p>{{ message }}</p>
+            {% endif %}
+            <br>
+            <button type="submit" class="btn btn-lg w-100" style="background-color: lightblue;">Predict</button>
+        </form>
+    </div>
+
+    {% if predicted_disease %}
+    <div class="predicted-disease">
+        <h2>Predicted Disease: {{ predicted_disease }}</h2>
+        <p>Description: {{ dis_des }}</p>
+        <h3>Precautions:</h3>
+        <ul>
+            {% for precaution in my_precautions %}
+                <li>{{ precaution }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Medications:</h3>
+        <ul>
+            {% for med in medications %}
+                <li>{{ med }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Recommended Diet:</h3>
+        <ul>
+            {% for diet in my_diet %}
+                <li>{{ diet }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Workout:</h3>
+        <p>{{ workout }}</p>
+    </div>
+    {% elif message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <!-- Modals -->
+    <div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="diseaseModalLabel">Predicted Disease</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ predicted_disease }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="descriptionModalLabel">Description</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ dis_des }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="precautionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="precautionModalLabel">Precaution</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in my_precautions %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicationsModalLabel">Medications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in medications %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="workoutsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="workoutsModalLabel">Workouts</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in workout %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HoA8Ki4oVaeF5Fx/zp7Bc6KIMtL5q4nGpKCOB0XSTHJ/JgUFAAAfLtbCifk4yTGw" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const startButton = document.getElementById("startSpeechRecognition");
+            const transcriptionDiv = document.getElementById("transcription");
+            
+            startButton.addEventListener("click", function() {
+                if ('webkitSpeechRecognition' in window) {
+                    const recognition = new webkitSpeechRecognition();
+                    recognition.lang = 'en-US';
+                    recognition.interimResults = false;
+                    recognition.maxAlternatives = 1;
+
+                    recognition.start();
+
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        transcriptionDiv.innerText = transcript;
+                    };
+
+                    recognition.onspeechend = function() {
+                        recognition.stop();
+                    };
+
+                    recognition.onerror = function(event) {
+                        transcriptionDiv.innerText = 'Error occurred in recognition: ' + event.error;
+                    };
+                } else {
+                    transcriptionDiv.innerText = 'Speech recognition not supported in this browser.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
