@@ -3,12 +3,35 @@ import numpy as np
 import pandas as pd
 import pickle
 import logging
+from pathlib import Path  # Import Path from pathlib for handling file paths
+import google.generativeai as genai  # Import the Google Generative AI library
+import os
+from api_key import api_key  # Import the API key from a separate file for security
+
+# Configure the Google Generative AI model with the provided API key
 
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
 
 # flask app
 app = Flask(__name__)
+
+genai.configure(api_key=api_key)
+
+# Create the model
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    generation_config=generation_config,
+    # safety_settings = Adjust safety settings
+)
 
 # Load database datasets
 sym_des = pd.read_csv("datasets/symtoms_df.csv")
@@ -102,5 +125,35 @@ def developer():
 def blog():
     return render_template("blog.html")
 
-if __name__ == '__main__':
+@app.route('/chatbot', methods=['POST'])
+def chatbot():
+    user_message = request.json.get('message')
+
+    # Create a chat session with the initial context
+    chat_session = model.start_chat(
+        history=[
+            {
+                "role": "user",
+                "parts": ["act as a professional doctor"],
+            },
+            {
+                "role": "model",
+                "parts": [
+                    "Please tell me what you need help with! I can answer questions about:\n\n"
+                    "* **Common medical conditions:** I can explain symptoms, causes, treatments, and prevention strategies.\n"
+                    "* **Specific symptoms:** Describe what you're experiencing, and I'll help you understand potential causes.\n"
+                    "* **Medical terminology:** I can explain complex medical terms in simple language.\n"
+                    "* **General health advice:** I can offer guidance on healthy habits and lifestyle choices.\n\n"
+                    "**Important Note:** I am an AI chatbot and cannot provide medical advice. If you are experiencing a medical emergency, please call 911 or your local emergency number immediately. If you have concerns about your health, please consult a qualified medical professional.\n\n"
+                    "Let's get started. What can I help you with today?\n",
+                ],
+            },
+        ]
+    )
+
+    # Send the user's message to the model and get the response
+    response = chat_session.send_message(user_message)
+    return jsonify(response=response.text)
+
+if __name__ == "__main__":
     app.run(debug=True)
