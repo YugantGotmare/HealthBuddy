@@ -1,1 +1,0 @@
-api_key = 'makeer_suite_google' # visit makersuite google

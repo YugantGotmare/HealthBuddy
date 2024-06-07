@@ -5,18 +5,17 @@ import pickle
 import logging
 from pathlib import Path  # Import Path from pathlib for handling file paths
 import google.generativeai as genai  # Import the Google Generative AI library
+from dotenv import load_dotenv
 import os
-from api_key import api_key  # Import the API key from a separate file for security
 
-# Configure the Google Generative AI model with the provided API key
+load_dotenv()
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
 
 # flask app
 app = Flask(__name__)
-
-genai.configure(api_key=api_key)
 
 # Create the model
 generation_config = {
