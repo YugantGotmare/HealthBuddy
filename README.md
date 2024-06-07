@@ -42,6 +42,7 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 - Enter the symptoms you are experiencing into the input field on the homepage.
 - Click on the "Predict" button.
 - The system will display the predicted disease along with relevant information and health advice.
+- Chatbot, if you have any queries regarding any health problem
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
