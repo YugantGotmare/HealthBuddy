@@ -1,7 +1,7 @@
 # HealthBuddy: Personalized Healthcare Assistance
 
 ## Introduction
-This project is a Disease Prediction and Health Advice system built using Flask, scikit-learn, and other libraries. It aims to help users identify potential diseases based on their symptoms and provides related health advice including precautions, medications, diets, and workouts.
+This project is a Disease Prediction and Health Advice system built using Flask, scikit-learn, and other Machine Learning Frameworks. It aims to help users identify potential diseases based on their symptoms and provides related health advice including precautions, medications, diets, and workouts.
 
 ## Features
 - Predicts potential diseases based on symptoms entered by the user.
