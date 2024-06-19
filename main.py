@@ -7,9 +7,11 @@ from pathlib import Path  # Import Path from pathlib for handling file paths
 import google.generativeai as genai  # Import the Google Generative AI library
 from dotenv import load_dotenv
 import os
+from api_key import api_key
 
-load_dotenv()
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+# load_dotenv()
+# genai.configure(api_key=os.getenv('GEMINI_API_KEY'))t
+genai.configure(api_key=api_key)
 
 # Initialize logging
 logging.basicConfig(level=logging.DEBUG)
