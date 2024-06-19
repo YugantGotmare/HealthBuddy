@@ -1,0 +1,21 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.env
+
+# Virtual environments
+venv
+env
+heathbuddy/Lib
+heathbuddy/Include
+heathbuddy/Scripts
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Data files
+datasets
