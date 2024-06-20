@@ -21,6 +21,7 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 - Bootstrap
 - Google Generative AI
 - Gemini
+- Docker
 
 ## Installation
 1. Clone the repository:
