@@ -45,5 +45,8 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 - The system will display the predicted disease along with relevant information and health advice.
 - Chatbot for any doubts/queries regarding any of your health problem.
 
+## Interface
+![Screenshot 2024-06-21 181148](https://github.com/YugantGotmare/HealthBuddy/assets/101650315/1c1b3863-c929-4637-8375-cba309d6d748)
+
 ## License
 This project is licensed under the [MIT License](LICENSE).
