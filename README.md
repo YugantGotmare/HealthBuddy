@@ -50,7 +50,7 @@ working\image1.png
 working\image2.png
 
 ## Working
-working\HealthBuddy.mp4
+[Watch the Video](working/HealthBuddy.mp4)
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
