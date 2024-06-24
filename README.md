@@ -50,7 +50,8 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 ![Image 2](working/image2.png)
 
 ## Working
-![Video Thumbnail](working\HealthBuddy.mp4)
+
+https://github.com/YugantGotmare/HealthBuddy/assets/101650315/ecf12cd9-4dd3-41c3-be33-94b5972bebab
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
