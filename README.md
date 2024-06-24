@@ -46,11 +46,11 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 - Chatbot for any doubts/queries regarding any of your health problem.
 
 ## Interface UI
-!working\image1.png
-!working\image2.png
+working\image1.png
+working\image2.png
 
 ## Working
-!working\HealthBuddy.mp4
+working\HealthBuddy.mp4
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
