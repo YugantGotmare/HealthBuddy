@@ -7,42 +7,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-image: url('static/bg.jpg');
-            background-size: cover; /* or contain */
+            background-size: cover;
             background-repeat: no-repeat;
-        }
-        .logo {
-            width: 50px;
-            height: 50px;
-            margin-top: 0;
-            margin-left: 2px;
-        }
-        .myimg {
-            width: 50px;
-            height: 50px;
-            border: 2px solid black;
-            border-radius: 25px;
+            background-attachment: fixed;
+            background-position: center;
         }
         .navbar-brand {
             font-weight: bold;
-            font-size: 1.5em;
+            font-size: 1.75em;
         }
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
         }
         .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link:hover {
             color: #fff;
+            text-decoration: underline;
         }
         h1 {
-            color: #333;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         .main-container {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.85);
             color: #333;
             border-radius: 15px;
             padding: 40px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 30px;
         }
         .btn-primary, .btn-danger {
             border-radius: 20px;
@@ -68,11 +61,11 @@
         .predicted-disease {
             text-align: center;
         }
-        /* Add styles for chatbot */
+        /* Chatbot Styles */
         #chatbot {
             border: 1px solid #ccc;
             padding: 10px;
-            width: 300px;
+            width: 350px;
             background: #fff;
             position: fixed;
             bottom: 10px;
@@ -82,7 +75,7 @@
         }
         #chatbox {
             border: 1px solid #ccc;
-            height: 200px;
+            height: 250px;
             overflow-y: scroll;
             padding: 10px;
             background: #f8f9fa;
@@ -95,33 +88,41 @@
         .userMessage {
             align-self: flex-end;
             background-color: #d1e7dd;
-            padding: 5px;
+            padding: 10px;
             margin: 5px;
-            border-radius: 5px;
+            border-radius: 15px;
+            max-width: 70%;
         }
         .botMessage {
             align-self: flex-start;
             background-color: #f8d7da;
-            padding: 5px;
+            padding: 10px;
             margin: 5px;
-            border-radius: 5px;
+            border-radius: 15px;
+            max-width: 70%;
+        }
+        .myimg {
+            width: 50px;
+            height: 50px;
+            border: 2px solid black;
+            border-radius: 25px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid justify-content-center"> <!-- Added justify-content-center -->
-            <!-- Logo at the top-left corner -->
-            <div class="logo">
+        <div class="container-fluid justify-content-center">
+            <div class="d-flex align-items-center">
                 <img class="myimg" src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo">
+                <a class="navbar-brand" href="#">HealthBuddy</a>
             </div>
-            <a class="navbar-brand" href="#">HealthBuddy</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-center"> <!-- Added d-flex justify-content-center -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-center">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
@@ -154,9 +155,9 @@
     </div>
 
     {% if predicted_disease %}
-    <div class="predicted-disease">
-        <h2>Predicted Disease: {{ predicted_disease }}</h2>
-        <p>Description: {{ dis_des }}</p>
+    <div class="container my-4 main-container">
+        <h2 class="text-center">Predicted Disease: {{ predicted_disease }}</h2>
+        <p><strong>Description:</strong> {{ dis_des }}</p>
         <h3>Precautions:</h3>
         <ul>
             {% for precaution in my_precautions %}
@@ -176,7 +177,11 @@
             {% endfor %}
         </ul>
         <h3>Workout:</h3>
-        <p>{{ workout }}</p>
+        <ul>
+            {% for exercise in workout %}
+                <li>{{ exercise }}</li>
+            {% endfor %}
+        </ul>
     </div>
     {% elif message %}
         <p>{{ message }}</p>
@@ -220,8 +225,8 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        {% for i in my_precautions %}
-                        <li>{{ i }}</li>
+                        {% for precaution in my_precautions %}
+                            <li>{{ precaution }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -229,17 +234,17 @@
         </div>
     </div>
 
-    <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="medicationModal" tabindex="-1" aria-labelledby="medicationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="medicationsModalLabel">Medications</h5>
+                    <h5 class="modal-title" id="medicationModalLabel">Medication</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul>
-                        {% for i in medications %}
-                        <li>{{ i }}</li>
+                        {% for med in medications %}
+                            <li>{{ med }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -247,17 +252,35 @@
         </div>
     </div>
 
-    <div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="workoutsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="dietModal" tabindex="-1" aria-labelledby="dietModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="workoutsModalLabel">Workouts</h5>
+                    <h5 class="modal-title" id="dietModalLabel">Recommended Diet</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul>
-                        {% for i in workout %}
-                        <li>{{ i }}</li>
+                        {% for diet in my_diet %}
+                            <li>{{ diet }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="workoutModal" tabindex="-1" aria-labelledby="workoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="workoutModalLabel">Workout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for exercise in workout %}
+                            <li>{{ exercise }}</li>
                         {% endfor %}
                     </ul>
                 </div>
