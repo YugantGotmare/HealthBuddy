@@ -7,6 +7,7 @@ This project is a Disease Prediction and Health Advice system built using Flask,
 - Predicts potential diseases based on symptoms entered by the user.
 - Provides detailed information about the predicted disease including its description, precautions, medications, recommended diet, and workouts.
 - Easy-to-use web interface.
+- Heathcare Chatbot 
 - Uses machine learning model for prediction.
 
 ## Technologies Used
