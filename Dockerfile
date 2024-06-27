@@ -8,7 +8,9 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir numpy==1.21.0 scikit-learn==0.24.2 \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy all files from the current directory to the working directory in the Docker image
 COPY . .
@@ -17,4 +19,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "HealthBuddy:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
