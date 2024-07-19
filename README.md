@@ -1,5 +1,5 @@
 # HealthBuddy: Personalized Healthcare Assistance
-# Link: https://healthbuddy-kzrq.onrender.com/predict
+Link: https://healthbuddy-kzrq.onrender.com/predict
 
 ## Introduction
 This project is a Disease Prediction and Health Advice system built using Flask, scikit-learn, and other Machine Learning Frameworks. It aims to help users identify potential diseases based on their symptoms and provides related health advice including precautions, medications, diets, and workouts.
